@@ -14,6 +14,8 @@ class AdminDashboardScreen extends ConsumerWidget {
     final ventasState = ref.watch(ventasProvider);
     final entregas = ref.watch(entregasProvider);
     final authState = ref.watch(authProvider);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     // Calcular métricas reales
     final totalVentasNum = ventasState.ventas.fold<double>(0, (sum, v) {
@@ -37,7 +39,7 @@ class AdminDashboardScreen extends ConsumerWidget {
     final totalVentasStr = "\$${rawTotal.replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[0]}.')}";
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(32),
         child: Column(
@@ -53,12 +55,12 @@ class AdminDashboardScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'Dashboard Global',
               style: TextStyle(
                 fontSize: 36,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF1E3A44),
+                color: isDark ? Colors.white : const Color(0xFF1E3A44),
               ),
             ),
             const SizedBox(height: 32),
@@ -144,21 +146,21 @@ class AdminDashboardScreen extends ConsumerWidget {
                     height: 400,
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(24),
                       boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 20)],
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               'Rendimiento Semanal',
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E3A44)),
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.titleLarge?.color),
                             ),
-                            Icon(Icons.more_horiz, color: Colors.grey),
+                            const Icon(Icons.more_horiz, color: Colors.grey),
                           ],
                         ),
                         const Spacer(),
@@ -183,21 +185,21 @@ class AdminDashboardScreen extends ConsumerWidget {
                     height: 400,
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(24),
                       boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 20)],
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           'Distribución de Flota',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E3A44)),
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.titleLarge?.color),
                         ),
                         const SizedBox(height: 32),
-                        _PieItem(label: 'Logística', percentage: 50, color: const Color(0xFF007982)),
-                        _PieItem(label: 'Comercial', percentage: 30, color: Colors.orange),
-                        _PieItem(label: 'Mantenimiento', percentage: 20, color: Colors.blue),
+                        const _PieItem(label: 'Logística', percentage: 50, color: Color(0xFF007982)),
+                        const _PieItem(label: 'Comercial', percentage: 30, color: Colors.orange),
+                        const _PieItem(label: 'Mantenimiento', percentage: 20, color: Colors.blue),
                         const Spacer(),
                         ElevatedButton(
                           onPressed: () => _showExportOptions(context, ref, ventasState, entregas, totalVentasNum),
@@ -354,7 +356,7 @@ class _StatCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 20)],
       ),
@@ -369,7 +371,7 @@ class _StatCard extends StatelessWidget {
           const SizedBox(height: 20),
           Text(title, style: const TextStyle(color: Colors.grey, fontSize: 14)),
           const SizedBox(height: 8),
-          Text(value, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFF1E3A44))),
+          Text(value, style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.bodyLarge?.color)),
           const SizedBox(height: 4),
           Text(subtitle, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600)),
         ],
@@ -411,15 +413,18 @@ class _PieItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Row(
         children: [
           Container(width: 12, height: 12, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
           const SizedBox(width: 12),
-          Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
+          Text(label, style: TextStyle(fontWeight: FontWeight.w500, color: theme.textTheme.bodyMedium?.color)),
           const Spacer(),
-          Text('$percentage%', style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text('$percentage%', style: TextStyle(fontWeight: FontWeight.bold, color: theme.textTheme.bodyLarge?.color)),
         ],
       ),
     );

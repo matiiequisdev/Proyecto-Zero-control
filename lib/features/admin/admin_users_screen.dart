@@ -28,12 +28,14 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
     final users = authState.registeredUsers;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Gestión de Usuarios Real', style: TextStyle(color: Color(0xFF1E3A44), fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.white,
+        title: Text('Gestión de Usuarios Real', style: TextStyle(color: theme.textTheme.titleLarge?.color, fontWeight: FontWeight.bold)),
+        backgroundColor: theme.appBarTheme.backgroundColor ?? theme.cardColor,
         elevation: 0,
         actions: [
           IconButton(
@@ -60,11 +62,11 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
                 children: [
                   const Icon(Icons.person_off_outlined, size: 64, color: Colors.grey),
                   const SizedBox(height: 16),
-                  const Text('No se encontraron usuarios en MySQL', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text('No se encontraron usuarios en MySQL', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: theme.textTheme.titleMedium?.color)),
                   const SizedBox(height: 8),
-                  const Text('Asegúrate de que tus archivos PHP estén en htdocs/zerocontrol', textAlign: TextAlign.center),
+                  const Text('Asegúrate de que tus archivos PHP estén en htdocs/zerocontrol', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey)),
                   const SizedBox(height: 24),
-                  ElevatedButton(onPressed: _loadData, child: const Text('Reintentar conexión')),
+                  ElevatedButton(onPressed: _loadData, child: const Text('Reintentar conexión', style: TextStyle(color: Colors.white))),
                 ],
               ),
             )
@@ -77,18 +79,18 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
                   margin: const EdgeInsets.only(bottom: 12),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   elevation: 0,
-                  borderOnForeground: true,
+                  color: theme.cardColor,
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(16),
                     leading: CircleAvatar(
                       backgroundColor: const Color(0xFF007982).withOpacity(0.1),
                       child: Text(u.name.substring(0, 1).toUpperCase(), style: const TextStyle(color: Color(0xFF007982), fontWeight: FontWeight.bold)),
                     ),
-                    title: Text(u.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                    title: Text(u.name, style: TextStyle(fontWeight: FontWeight.bold, color: theme.textTheme.bodyLarge?.color)),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(u.email, style: const TextStyle(fontSize: 12)),
+                        Text(u.email, style: const TextStyle(fontSize: 12, color: Colors.grey)),
                         const SizedBox(height: 4),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -101,26 +103,22 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          tooltip: 'Cambiar Rol',
                           icon: const Icon(Icons.manage_accounts, color: Colors.teal, size: 20),
                           onPressed: () => _showChangeRoleDialog(context, ref, u),
                         ),
                         IconButton(
-                          tooltip: 'Cambiar Contraseña',
                           icon: const Icon(Icons.lock_reset, color: Colors.blue, size: 20),
                           onPressed: () => _showChangePasswordDialog(context, ref, u.email),
                         ),
                         IconButton(
-                          tooltip: u.isBlocked ? 'Desbloquear' : 'Bloquear',
                           icon: Icon(u.isBlocked ? Icons.lock : Icons.lock_open, 
-                              color: u.isBlocked ? Colors.orange : Colors.green, size: 20),
+                              color: u.isBlocked ? Colors.red : Colors.green, size: 20),
                           onPressed: () async {
                              await ref.read(authProvider.notifier).blockUser(u.email, !u.isBlocked);
                              _loadData();
                           },
                         ),
                         IconButton(
-                          tooltip: 'Eliminar Usuario',
                           icon: const Icon(Icons.delete_outline, color: Colors.red, size: 20),
                           onPressed: () => _showDeleteConfirmDialog(context, ref, u),
                         ),

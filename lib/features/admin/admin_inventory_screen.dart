@@ -9,9 +9,11 @@ class AdminInventoryScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final activos = ref.watch(activosProvider);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Padding(
         padding: const EdgeInsets.all(32.0),
         child: Column(
@@ -27,9 +29,9 @@ class AdminInventoryScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'Maestro de Activos',
-              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF1E3A44)),
+              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: isDark ? Colors.white : const Color(0xFF1E3A44)),
             ),
             const SizedBox(height: 32),
             
@@ -78,7 +80,7 @@ class AdminInventoryScreen extends ConsumerWidget {
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: theme.cardColor,
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 20)],
                 ),
@@ -88,7 +90,7 @@ class AdminInventoryScreen extends ConsumerWidget {
                     scrollDirection: Axis.horizontal,
                     child: SingleChildScrollView(
                       child: DataTable(
-                        headingRowColor: WidgetStateProperty.all(const Color(0xFFF0F9F9)),
+                        headingRowColor: WidgetStateProperty.all(isDark ? Colors.white.withOpacity(0.05) : const Color(0xFFF0F9F9)),
                         columns: const [
                           DataColumn(label: Text('ID ACTIVO', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
                           DataColumn(label: Text('EQUIPO', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
@@ -103,16 +105,16 @@ class AdminInventoryScreen extends ConsumerWidget {
                               
                           return DataRow(cells: [
                             DataCell(Text(a.id, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey))),
-                            DataCell(Text(a.name, style: const TextStyle(fontWeight: FontWeight.w600))),
+                            DataCell(Text(a.name, style: TextStyle(fontWeight: FontWeight.w600, color: theme.textTheme.bodyLarge?.color))),
                             DataCell(Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(a.location, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E3A44))),
+                                Text(a.location, style: TextStyle(fontWeight: FontWeight.bold, color: isDark ? Colors.white : const Color(0xFF1E3A44))),
                                 Text(a.address, style: const TextStyle(fontSize: 11, color: Colors.grey)),
                               ],
                             )),
-                            DataCell(Text(lastMaint)),
+                            DataCell(Text(lastMaint, style: TextStyle(color: theme.textTheme.bodyMedium?.color))),
                             DataCell(Container(
                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                               decoration: BoxDecoration(
@@ -154,7 +156,7 @@ class _SmallStat extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: color.withOpacity(0.2)),
       ),
@@ -163,7 +165,7 @@ class _SmallStat extends StatelessWidget {
         children: [
           Text(label, style: const TextStyle(color: Colors.grey, fontSize: 11, fontWeight: FontWeight.bold)),
           const SizedBox(height: 4),
-          Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E3A44))),
+          Text(value, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.bodyLarge?.color)),
         ],
       ),
     );

@@ -15,6 +15,7 @@ import '../admin/admin_dashboard_screen.dart';
 import '../admin/admin_users_screen.dart';
 import '../admin/admin_map_screen.dart';
 import '../admin/admin_inventory_screen.dart';
+import '../../core/theme_provider.dart';
 import 'dashboard_provider.dart';
 
 class DashboardLayout extends ConsumerStatefulWidget {
@@ -73,20 +74,22 @@ class _DashboardLayoutState extends ConsumerState<DashboardLayout> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isMobile = constraints.maxWidth < 800;
+        final theme = Theme.of(context);
+        final isDark = theme.brightness == Brightness.dark;
 
         return Scaffold(
-          backgroundColor: const Color(0xFFF8F9FA),
+          backgroundColor: theme.scaffoldBackgroundColor,
           drawer: isMobile
               ? Drawer(
                   shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                  backgroundColor: Colors.white,
+                  backgroundColor: theme.cardColor,
                   child: _buildSidebar(user, isConnected, activos.length),
                 )
               : null,
           body: Row(
             children: [
               if (!isMobile) _buildSidebar(user, isConnected, activos.length),
-              if (!isMobile) const VerticalDivider(width: 1, thickness: 1),
+              if (!isMobile) VerticalDivider(width: 1, thickness: 1, color: theme.dividerColor),
               // Contenido Principal
               Expanded(
                 child: Column(
@@ -293,9 +296,12 @@ class _DashboardLayoutState extends ConsumerState<DashboardLayout> {
     final activosCompletados = ref.watch(activosProvider).where((a) => a.status == 'Completada').length;
     final activosPendientes = ref.watch(activosProvider).where((a) => a.status != 'Completada').length;
 
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       width: 280,
-      color: Colors.white,
+      color: theme.cardColor,
       child: Column(
         children: [
           const SizedBox(height: 32),
@@ -331,7 +337,7 @@ class _DashboardLayoutState extends ConsumerState<DashboardLayout> {
             margin: const EdgeInsets.symmetric(horizontal: 16),
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: const Color(0xFFEDF8F9),
+              color: isDark ? Colors.white.withOpacity(0.05) : const Color(0xFFEDF8F9),
               borderRadius: BorderRadius.circular(24),
             ),
             child: Row(
@@ -351,7 +357,11 @@ class _DashboardLayoutState extends ConsumerState<DashboardLayout> {
                     children: [
                       Text(
                         user?.name ?? 'Usuario',
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF1E3A44)),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold, 
+                          fontSize: 16, 
+                          color: isDark ? Colors.white : const Color(0xFF1E3A44)
+                        ),
                         overflow: TextOverflow.ellipsis,
                       ),
                       GestureDetector(
@@ -592,16 +602,32 @@ class _DashboardLayoutState extends ConsumerState<DashboardLayout> {
               ],
             ),
           ),
-          // Help Center
+          // Help Center & Theme Toggle
           Padding(
-            padding: const EdgeInsets.only(bottom: 24),
-            child: ListTile(
-              leading: const Icon(Icons.help_outline, color: Colors.grey, size: 22),
-              title: const Text(
-                'Centro de ayuda',
-                style: TextStyle(color: Color(0xFF546E7A), fontSize: 14, fontWeight: FontWeight.w500),
+            padding: const EdgeInsets.only(bottom: 24, right: 16),
+            child: Material(
+              color: Colors.transparent,
+              child: ListTile(
+                leading: Icon(Icons.help_outline, color: isDark ? Colors.white70 : Colors.grey, size: 22),
+                title: Text(
+                  'Centro de ayuda',
+                  style: TextStyle(
+                    color: isDark ? Colors.white70 : const Color(0xFF546E7A), 
+                    fontSize: 14, 
+                    fontWeight: FontWeight.w500
+                  ),
+                ),
+                trailing: IconButton(
+                  onPressed: () => ref.read(themeProvider.notifier).toggleTheme(),
+                  icon: Icon(
+                    ref.watch(themeProvider) == ThemeMode.dark 
+                      ? Icons.light_mode_outlined 
+                      : Icons.dark_mode_outlined,
+                    color: const Color(0xFF64FFDA),
+                  ),
+                ),
+                onTap: () {},
               ),
-              onTap: () {},
             ),
           ),
         ],
