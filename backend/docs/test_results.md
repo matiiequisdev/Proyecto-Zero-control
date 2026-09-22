@@ -2,7 +2,7 @@
 
 Se ha implementado una suite completa de pruebas para asegurar la estabilidad del sistema, cubriendo tanto la lógica de negocio (Unit Tests) como la interfaz de usuario (UI Tests).
 
-## 📊 Resumen Ejecutivo
+##  Resumen Ejecutivo
 - **Total de pruebas ejecutadas:** 12
 - **Pruebas Unitarias:** 9 (Aprobadas ✅)
 - **Pruebas de Interfaz (Widget):** 3 (Aprobadas ✅)
@@ -10,7 +10,7 @@ Se ha implementado una suite completa de pruebas para asegurar la estabilidad de
 
 ---
 
-## 🧪 Pruebas Unitarias (8+ implementadas)
+## Pruebas Unitarias (8+ implementadas)
 Ubicación: `test/unit_test.dart`
 
 | ID | Nombre del Test | Objetivo | Resultado |
@@ -27,7 +27,7 @@ Ubicación: `test/unit_test.dart`
 
 ---
 
-## 📱 Pruebas de Interfaz (3 implementadas)
+##  Pruebas de Interfaz (3 implementadas)
 Ubicación: `test/ui_test.dart`
 
 | ID | Componente/Pantalla | Objetivo | Resultado |
@@ -38,7 +38,7 @@ Ubicación: `test/ui_test.dart`
 
 ---
 
-## 🛠️ Instrucciones de Ejecución
+## Instrucciones de Ejecución
 
 Para volver a ejecutar las pruebas y verificar los resultados, usa los siguientes comandos en la terminal:
 
