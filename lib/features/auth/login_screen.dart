@@ -111,6 +111,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     TextField(
                       controller: _emailController,
                       enabled: !authState.isBlocked,
+                      style: const TextStyle(color: Colors.black),
                       decoration: const InputDecoration(
                         hintText: 'usuario@gmail.com',
                         prefixIcon: Icon(Icons.mail_outline),
@@ -124,6 +125,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       controller: _passController,
                       obscureText: true,
                       enabled: !authState.isBlocked,
+                      style: const TextStyle(color: Colors.black),
                       decoration: const InputDecoration(
                         hintText: 'Ingresa tu contraseña',
                         prefixIcon: Icon(Icons.lock_outline),
@@ -310,7 +312,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     SizedBox(height: 24),
                     Text(
-                      '© 2024 ZeroCONTROL · Operaciones inteligentes en terreno',
+                      '© 2026 ZeroCONTROL · Operaciones inteligentes en terreno',
                       style: TextStyle(color: Colors.grey, fontSize: 10),
                     ),
                   ],
