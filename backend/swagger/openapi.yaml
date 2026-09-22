@@ -1,0 +1,107 @@
+openapi: 3.0.0
+info:
+  title: ZeroCONTROL API Documentation
+  description: Documentación oficial de los endpoints para la gestión de usuarios, ventas y logística en ZeroCONTROL.
+  version: 1.0.0
+servers:
+  - url: http://localhost/zerocontrol
+    description: Servidor Local (XAMPP)
+
+paths:
+  /register.php:
+    post:
+      summary: Registro de nuevo usuario
+      description: Crea una cuenta en MySQL para técnicos, vendedores, transportistas o administradores.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string, example: "Matias Sanchez" }
+                email: { type: string, example: "usuario@gmail.com" }
+                password: { type: string, example: "123456" }
+                role: { type: integer, description: "0: Admin, 1: Técnico, 2: Vendedor, 3: Transportista", example: 0 }
+      responses:
+        '200':
+          description: Usuario registrado con éxito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  message: { type: string }
+
+  /login.php:
+    post:
+      summary: Inicio de sesión
+      description: Valida credenciales y devuelve el perfil del usuario si no está bloqueado.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string, example: "usuario@gmail.com" }
+                password: { type: string, example: "123456" }
+      responses:
+        '200':
+          description: Credenciales válidas
+        '401':
+          description: Error de autenticación
+
+  /get_users.php:
+    get:
+      summary: Obtener todos los usuarios
+      description: Devuelve la lista completa de personal registrado en la base de datos.
+      responses:
+        '200':
+          description: Lista de usuarios obtenida
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  users:
+                    type: array
+                    items:
+                      type: object
+
+  /update_user.php:
+    post:
+      summary: Actualizar datos de usuario
+      description: Permite al administrador cambiar contraseñas, roles o bloquear cuentas.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string }
+                password: { type: string }
+                is_blocked: { type: integer, enum: [0, 1] }
+                role: { type: integer }
+      responses:
+        '200':
+          description: Usuario actualizado
+
+  /delete_user.php:
+    post:
+      summary: Eliminar usuario
+      description: Borra permanentemente un registro de la tabla 'users' por email.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string }
+      responses:
+        '200':
+          description: Usuario eliminado con éxito
